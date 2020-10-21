@@ -22,6 +22,7 @@ public class StateCensusAnalyser {
 			CsvToBeanBuilder<CsvStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
 			CsvToBean<CsvStateCensus> csvToBean = csvToBeanBuilder.withType(CsvStateCensus.class)
 					.withIgnoreLeadingWhiteSpace(true).build();
+			
 			Iterator<CsvStateCensus> csvItr = csvToBean.iterator();
 			Iterable<CsvStateCensus> csvIterable = () -> csvItr;
 			int noOfEntries = (int)StreamSupport.stream(csvIterable.spliterator(), false).count();
@@ -35,6 +36,9 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
 		} catch (IllegalStateException e) {
 			throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+		}
+		catch(RuntimeException e) {
+			throw new CensusAnalyserException("Data not according to format", CensusAnalyserException.ExceptionType.INTERNAL_ISSUE);
 		}
 	}
 
