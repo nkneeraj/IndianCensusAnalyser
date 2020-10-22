@@ -19,7 +19,8 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException(".csv file not found", CensusAnalyserException.ExceptionType.WRONG_TYPE);
 		}
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			Iterator<CsvStateCensus> csvItr = new OpenCsvBuilder().getCsvFileIterator(reader, CsvStateCensus.class);
+			ICsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
+			Iterator<CsvStateCensus> csvItr = csvBuilder.getCsvFileIterator(reader, CsvStateCensus.class);
 			return filesize(csvItr);
 		} catch (IOException e) {
 			throw new CensusAnalyserException(e.getMessage(),
@@ -38,7 +39,8 @@ public class StateCensusAnalyser {
 		}
 
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			Iterator<StateCodeCSV> csvItr = new OpenCsvBuilder().getCsvFileIterator(reader, StateCodeCSV.class);
+			ICsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
+			Iterator<StateCodeCSV> csvItr = csvBuilder.getCsvFileIterator(reader, StateCodeCSV.class);
 			return filesize(csvItr);
 		} catch (IOException e) {
 			throw new CensusAnalyserException(e.getMessage(),
