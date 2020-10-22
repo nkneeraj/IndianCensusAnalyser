@@ -14,7 +14,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 public class StateCensusAnalyser {
 
-	public int loadStateCsvData(String csvFilePath) throws CensusAnalyserException {
+	public int loadStateCsvData(String csvFilePath) throws CensusAnalyserException, CsvException {
 		if (!csvFilePath.contains(".csv")) {
 			throw new CensusAnalyserException(".csv file not found", CensusAnalyserException.ExceptionType.WRONG_TYPE);
 		}
@@ -30,10 +30,12 @@ public class StateCensusAnalyser {
 		} catch (RuntimeException e) {
 			throw new CensusAnalyserException("Data not according to format",
 					CensusAnalyserException.ExceptionType.INTERNAL_ISSUE);
+		} catch(CsvException e){
+			throw new CsvException(e.getMessage(),CsvException.ExceptionType.UNABLE_TO_PARSE);
 		}
 	}
 
-	public int loadStateCode(String csvFilePath) throws CensusAnalyserException {
+	public int loadStateCode(String csvFilePath) throws CensusAnalyserException, CsvException {
 		if (!csvFilePath.contains(".csv")) {
 			throw new CensusAnalyserException(".csv file not found", CensusAnalyserException.ExceptionType.WRONG_TYPE);
 		}
@@ -50,6 +52,8 @@ public class StateCensusAnalyser {
 		} catch (RuntimeException e) {
 			throw new CensusAnalyserException("Data not according to format",
 					CensusAnalyserException.ExceptionType.INTERNAL_ISSUE);
+		}catch(CsvException e){
+			throw new CsvException(e.getMessage(),CsvException.ExceptionType.UNABLE_TO_PARSE);
 		}
 	}
 
