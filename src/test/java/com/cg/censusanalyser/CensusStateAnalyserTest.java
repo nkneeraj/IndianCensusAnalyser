@@ -20,13 +20,13 @@ public class CensusStateAnalyserTest {
 	   }
 	   
 	   @Test
-		public void givenStateCensusCSVFile_ShouldReturnNumberOfRecords() throws CensusAnalyserException {
+		public void givenStateCensusCSVFile_ShouldReturnNumberOfRecords() throws CensusAnalyserException, CsvException {
 			int noOfEntries = censusAnalyser.loadStateCsvData(STATE_CENSUS_FILE_PATH);
 			Assert.assertEquals(29, noOfEntries);
 		}	
 	   
 	   @Test
-		public void givenStateCensus_WrongCSVFile_ShouldThrowException()  {
+		public void givenStateCensus_WrongCSVFile_ShouldThrowException() throws CsvException  {
 		   try {
 			censusAnalyser.loadStateCsvData(NOT_CSV_FILE);
 		   }catch(CensusAnalyserException e) {
@@ -35,7 +35,7 @@ public class CensusStateAnalyserTest {
 		}
 	   
 	   @Test
-		public void givenStateCensus_WrongHeader_ShouldThrowException()  {
+		public void givenStateCensus_WrongHeader_ShouldThrowException() throws CsvException  {
 		   try {
 			censusAnalyser.loadStateCsvData(WRONG_HEADER);
 		   }catch(CensusAnalyserException e) {
@@ -46,13 +46,13 @@ public class CensusStateAnalyserTest {
 	   	//State Code Test
 	   
 	   @Test
-		public void givenStateCodeCSVFile_ShouldReturnNumberOfRecords() throws CensusAnalyserException {
+		public void givenStateCodeCSVFile_ShouldReturnNumberOfRecords() throws CensusAnalyserException, CsvException {
 			int noOfEntries = censusAnalyser.loadStateCode(STATE_CODE_FILE);
 			Assert.assertEquals(37, noOfEntries);
 		}	
 	   
 	   @Test
-		public void givenStateCode_WrongCSVFile_ShouldThrowException()  {
+		public void givenStateCode_WrongCSVFile_ShouldThrowException() throws CsvException  {
 		   try {
 			censusAnalyser.loadStateCode(NOT_CSV_FILE);
 		   }catch(CensusAnalyserException e) {
@@ -61,7 +61,7 @@ public class CensusStateAnalyserTest {
 		}
 	   
 	   @Test
-		public void givenStateCode_WrongHeader_ShouldThrowException()  {
+		public void givenStateCode_WrongHeader_ShouldThrowException() throws CsvException  {
 		   try {
 			censusAnalyser.loadStateCode(WRONG_HEADER);
 		   }catch(CensusAnalyserException e) {
