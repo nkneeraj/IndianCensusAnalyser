@@ -19,6 +19,16 @@ public class CSVStateCensus {
 		int pop = Integer.parseInt(population);
 		return pop;
 	}
+	
+	public int getPopulationDensityData() {
+		int pop = Integer.parseInt(densityPerSqKm);
+		return pop;
+	}
+	
+	public int getArea() {
+		int pop = Integer.parseInt(areaInSqKm);
+		return pop;
+	}
 
 	@Override
 	public String toString() {

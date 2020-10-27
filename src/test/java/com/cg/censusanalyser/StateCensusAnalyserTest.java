@@ -74,4 +74,20 @@ public class StateCensusAnalyserTest {
 		CSVStateCensus[] censusCsv = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
 		Assert.assertEquals("Andhra Pradesh", censusCsv[0].state);
 	}
+	
+	@Test
+	public void censusSortedOnStateDensity() throws CensusException {
+		stateCensusAnalyser.loadIndiaCensusData(Paths.get(STATE_CENSUS_DATA));
+		String sortedCensusData = stateCensusAnalyser.getStatePopulationDensityWiseSortedCensusData();
+		CSVStateCensus[] censusCsv = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+		Assert.assertEquals("Bihar", censusCsv[28].state);
+	}
+	
+	@Test
+	   public void censusSortedOnStateArea() throws CensusException {
+		  stateCensusAnalyser.loadIndiaCensusData(Paths.get(STATE_CENSUS_DATA));
+		  String sortedCensus = stateCensusAnalyser.getAreaWiseData();
+		  CSVStateCensus[] censusSortedCsv = new Gson().fromJson(sortedCensus, CSVStateCensus[].class);
+		  Assert.assertEquals("Rajasthan", censusSortedCsv[28].state);
+	   }
 }
