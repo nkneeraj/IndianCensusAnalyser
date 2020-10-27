@@ -2,8 +2,7 @@ package com.cg.censusanalyser;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class StateCodeCSV {
-
+public class StateCode {
 	@CsvBindByName(column = "SrNo", required = true)
 	public String srNo;
 
@@ -18,8 +17,8 @@ public class StateCodeCSV {
 
 	@Override
 	public String toString() {
-		return "IndiaStateCodeCSV{" + "srNo=" + srNo + '\'' + ", stateName=" + stateName + ", tin=" + tin
+		return "IndiaStateCodeCSV{" + "srNo='" + srNo + '\'' + ", stateName=" + stateName + ", tin=" + tin
 				+ ", stateCode=" + stateCode + '}';
-	}
 
+	}
 }

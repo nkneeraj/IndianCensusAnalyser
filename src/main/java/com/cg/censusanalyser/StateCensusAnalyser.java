@@ -9,60 +9,56 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-
 public class StateCensusAnalyser {
 
-	public int loadStateCsvData(String csvFilePath) throws CensusAnalyserException, CsvException {
+	List<CSVStateCensus> csvCensusList;
+	List<StateCode> csvStateList;
+
+	public StateCensusAnalyser() {
+		this.csvCensusList = new ArrayList<CSVStateCensus>();
+		this.csvStateList = new ArrayList<StateCode>();
+
+	}
+
+	public int loadIndiaCensusData(String csvFilePath) throws CensusException {
 		if (!csvFilePath.contains(".csv")) {
-			throw new CensusAnalyserException(".csv file not found", CensusAnalyserException.ExceptionType.WRONG_TYPE);
+			throw new CensusException("Not CSV file", CensusException.ExceptionType.WRONG_TYPE);
 		}
 		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			ICsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-			Iterator<CsvStateCensus> csvItr = csvBuilder.getCsvFileIterator(reader, CsvStateCensus.class);
-			return filesize(csvItr);
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			csvCensusList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
+			return csvCensusList.size();
 		} catch (IOException e) {
-			throw new CensusAnalyserException(e.getMessage(),
-					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-		} catch (IllegalStateException e) {
-			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+			throw new CensusException("File not found", CensusException.ExceptionType.WRONG_CSV);
 		} catch (RuntimeException e) {
-			throw new CensusAnalyserException("Data not according to format",
-					CensusAnalyserException.ExceptionType.INTERNAL_ISSUE);
-		} catch(CsvException e){
-			throw new CsvException(e.getMessage(),CsvException.ExceptionType.UNABLE_TO_PARSE);
+			throw new CensusException("File data not proper", CensusException.ExceptionType.UNABLE_TO_PARSE);
+
+		} catch (CSVException e) {
+			throw new CensusException(e.getMessage(), CensusException.ExceptionType.UNABLE_TO_PARSE);
 		}
 	}
 
-	public int loadStateCode(String csvFilePath) throws CensusAnalyserException, CsvException {
+	public int loadIndiaStateCodeData(String csvFilePath) throws CensusException {
 		if (!csvFilePath.contains(".csv")) {
-			throw new CensusAnalyserException(".csv file not found", CensusAnalyserException.ExceptionType.WRONG_TYPE);
+			throw new CensusException("Not CSV file", CensusException.ExceptionType.WRONG_TYPE);
+		}
+		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			csvStateList = csvBuilder.getCSVFileList(reader, StateCode.class);
+			return csvStateList.size();
+		} catch (IOException e) {
+			throw new CensusException("File not found", CensusException.ExceptionType.WRONG_CSV);
+		} catch (RuntimeException e) {
+			throw new CensusException("File data not proper", CensusException.ExceptionType.UNABLE_TO_PARSE);
+		} catch (CSVException e) {
+			throw new CensusException(e.getMessage(), CensusException.ExceptionType.UNABLE_TO_PARSE);
 		}
 
-		try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			ICsvBuilder csvBuilder = CsvBuilderFactory.createCsvBuilder();
-			Iterator<StateCodeCSV> csvItr = csvBuilder.getCsvFileIterator(reader, StateCodeCSV.class);
-			return filesize(csvItr);
-		} catch (IOException e) {
-			throw new CensusAnalyserException(e.getMessage(),
-					CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-		} catch (IllegalStateException e) {
-			throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-		} catch (RuntimeException e) {
-			throw new CensusAnalyserException("Data not according to format",
-					CensusAnalyserException.ExceptionType.INTERNAL_ISSUE);
-		}catch(CsvException e){
-			throw new CsvException(e.getMessage(),CsvException.ExceptionType.UNABLE_TO_PARSE);
-		}
 	}
 
-	private <E> int filesize(Iterator<E> csvIterator) {
-		ArrayList<E> stateCensusList = new ArrayList<E>();
-		while (csvIterator.hasNext()) {
-			stateCensusList.add(csvIterator.next());
-		}
-		System.out.println(stateCensusList);
-		return stateCensusList.size();
+	private <E> int getCount(Iterator<E> iterator) {
+		Iterable<E> csvIterable = () -> iterator;
+		int numOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+		return numOfEntries;
 	}
 }
